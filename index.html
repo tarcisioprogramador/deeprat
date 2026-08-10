@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pentest Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid #00ff00;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #00ff00;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #00aa00;
+            font-size: 1.2em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+        
+        .tab:hover, .tab.active {
+            background: #00ff00;
+            color: #000;
+        }
+        
+        .panel {
+            display: none;
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #00ff00;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ff00;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: monospace;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            box-shadow: 0 0 5px #00ff00;
+        }
+        
+        button {
+            padding: 12px 30px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #00aa00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #0a0a0a;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .error {
+            color: #ff0000;
+            border-color: #ff0000;
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .badge-critical { background: #ff0000; color: #fff; }
+        .badge-high { background: #ff6600; color: #fff; }
+        .badge-medium { background: #ffcc00; color: #000; }
+        .badge-low { background: #00ff00; color: #000; }
+        
+        .warning {
+            background: #332200;
+            border: 1px solid #ffcc00;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .warning strong {
+            color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 PENTEST TOOLS</h1>
+            <p class="subtitle">Ferramentas Locais de Penetration Testing</p>
+        </header>
+        
+        <div class="warning">
+            <strong>⚠️ AVISO:</strong> Use apenas em sistemas autorizados para teste. Não utilize para atividades ilegais.
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('password')">🔑 Senhas</div>
+            <div class="tab" onclick="showTab('commands')">💻 Comandos</div>
+            <div class="tab" onclick="showTab('vulns')">🔍 Vulnerabilidades</div>
+            <div class="tab" onclick="showTab('exploit')">🎯 Exploração</div>
+            <div class="tab" onclick="showTab('brute')">💥 Força Bruta</div>
+            <div class="tab" onclick="showTab('webscan')">🌐 Web Scanner</div>
+            <div class="tab" onclick="showTab('chat')">💬 Chat IA</div>
+        </div>
+        
+        <!-- Password Panel -->
+        <div id="password" class="panel active">
+            <h2>Análise de Senhas</h2>
+            <div class="row">
+                <div>
+                    <div class="form-group">
+                        <label>Analisar Senha</label>
+                        <input type="password" id="password-input" placeholder="Digite uma senha">
+                        <button onclick="analyzePassword()">Analizar</button>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Gerar Wordlist</label>
+                        <input type="text" id="wordlist-base" placeholder="Palavra base">
+                        <button onclick="generateWordlist()">Gerar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="password-result" class="result"></div>
+        </div>
+        
+        <!-- Commands Panel -->
+        <div id="commands" class="panel">
+            <h2>Geração de Comandos</h2>
+            <div class="form-group">
+                <label>Ferramenta</label>
+                <select id="tool-select" onchange="updateActions()">
+                    <option value="nmap">Nmap</option>
+                    <option value="metasploit">Metasploit</option>
+                    <option value="shell">Reverse Shell</option>
+                    <option value="hydra">Hydra</option>
+                    <option value="sqlmap">SQLMap</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Ação</label>
+                <select id="action-select">
+                    <option value="quick_scan">Scan Rápido</option>
+                    <option value="full_scan">Scan Completo</option>
+                    <option value="stealth_scan">Scan Stealth</option>
+                    <option value="vuln_scan">Scan Vulnerabilidades</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Parâmetros (JSON)</label>
+                <textarea id="params-input" rows="4" placeholder='{"target": "192.168.1.1"}'></textarea>
+            </div>
+            <button onclick="generateCommand()">Gerar Comando</button>
+            <div id="command-result" class="result"></div>
+        </div>
+        
+        <!-- Vulnerabilities Panel -->
+        <div id="vulns" class="panel">
+            <h2>Análise de Vulnerabilidades</h2>
+            <div class="row">
+                <div>
+                    <div class="form-group">
+                        <label>Porta</label>
+                        <input type="number" id="port-input" placeholder="22">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Serviço</label>
+                        <input type="text" id="service-input" placeholder="SSH">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Versão</label>
+                <input type="text" id="version-input" placeholder="7.6p1">
+            </div>
+            <button onclick="analyzeVuln()">Analisar</button>
+            <div id="vuln-result" class="result"></div>
+        </div>
+        
+        <!-- Exploit Panel -->
+        <div id="exploit" class="panel">
+            <h2>Técnicas de Exploração</h2>
+            <div class="tabs" style="margin-bottom: 15px;">
+                <div class="tab active" onclick="showExploitTab('privesc')">Privilege Escalation</div>
+                <div class="tab" onclick="showExploitTab('postexploit')">Pós-Exploração</div>
+                <div class="tab" onclick="showExploitTab('antiforensics')">Anti-Forensics</div>
+            </div>
+            
+            <div id="privesc" class="panel active">
+                <div class="form-group">
+                    <label>Sistema Operacional</label>
+                    <select id="os-select">
+                        <option value="linux">Linux</option>
+                        <option value="windows">Windows</option>
+                    </select>
+                </div>
+                <button onclick="getPrivEsc()">Buscar Técnicas</button>
+            </div>
+            
+            <div id="postexploit" class="panel">
+                <div class="form-group">
+                    <label>Fase</label>
+                    <select id="post-phase">
+                        <option value="enumeration">Enumeração</option>
+                        <option value="persistence">Persistência</option>
+                        <option value="data_exfil">Exfiltração de Dados</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Sistema</label>
+                    <select id="post-os">
+                        <option value="linux">Linux</option>
+                        <option value="windows">Windows</option>
+                    </select>
+                </div>
+                <button onclick="getPostExploit()">Buscar Técnicas</button>
+            </div>
+            
+            <div id="antiforensics" class="panel">
+                <div class="form-group">
+                    <label>Sistema</label>
+                    <select id="anti-os">
+                        <option value="linux">Linux</option>
+                        <option value="windows">Windows</option>
+                    </select>
+                </div>
+                <button onclick="getAntiForensics()">Buscar Técnicas</button>
+            </div>
+            
+            <div id="exploit-result" class="result"></div>
+        </div>
+        
+        <!-- Brute Force Panel -->
+        <div id="brute" class="panel">
+            <h2>💥 Força Bruta</h2>
+            
+            <div class="tabs" style="margin-bottom: 15px;">
+                <div class="tab active" onclick="showBruteTab('hydra')">Hydra</div>
+                <div class="tab" onclick="showBruteTab('wordlist')">Wordlist</div>
+            </div>
+            
+            <div id="hydra" class="panel active">
+                <div class="row">
+                    <div>
+                        <div class="form-group">
+                            <label>Target (IP/Domínio)</label>
+                            <input type="text" id="hydra-target" placeholder="192.168.1.1">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label>Serviço</label>
+                            <select id="hydra-service">
+                                <option value="ssh">SSH (22)</option>
+                                <option value="ftp">FTP (21)</option>
+                                <option value="http">HTTP (80)</option>
+                                <option value="mysql">MySQL (3306)</option>
+                                <option value="rdp">RDP (3389)</option>
+                                <option value="smb">SMB (445)</option>
+                                <option value="telnet">Telnet (23)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="form-group">
+                            <label>Usuário</label>
+                            <input type="text" id="hydra-user" placeholder="admin">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label>Porta (opcional)</label>
+                            <input type="number" id="hydra-port" placeholder="Auto">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="generateHydra()">Gerar Comando</button>
+                <div id="hydra-result" class="result"></div>
+            </div>
+            
+            <div id="wordlist" class="panel">
+                <div class="form-group">
+                    <label>Palavras Base (separadas por vírgula)</label>
+                    <input type="text" id="wl-words" placeholder="admin,root,user,test">
+                </div>
+                <button onclick="generateWordlistBrute()">Gerar Wordlist</button>
+                <div id="wl-result" class="result"></div>
+            </div>
+        </div>
+        
+        <!-- Web Scanner Panel -->
+        <div id="webscan" class="panel">
+            <h2>🌐 Web Vulnerability Scanner</h2>
+            <p style="color: #00aa00; margin-bottom: 15px;">Escaneia um site em busca de falhas conhecidas</p>
+            
+            <div class="warning" style="background: #220000; border-color: #ff0000;">
+                <strong>⚠️ APENAS EM SISTEMAS AUTORIZADOS!</strong> Escanear sites sem autorização é crime.
+            </div>
+            
+            <div class="form-group">
+                <label>URL do Site</label>
+                <input type="text" id="scan-url" placeholder="https://exemplo.com">
+            </div>
+            <button onclick="scanWeb()">🔍 Escanear</button>
+            <div id="scan-result" class="result"></div>
+        </div>
+        
+        <!-- Chat Panel -->
+        <div id="chat" class="panel">
+            <h2>💬 Chat DeepHat</h2>
+            
+            <div class="form-group" style="background: #1a1a1a; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <label>🔐 Token Hugging Face (hf_...)</label>
+                <input type="password" id="api-key-input" placeholder="Cole seu token hf_...">
+                <button onclick="authenticate()" style="margin-top: 10px;">Conectar</button>
+                <div id="auth-result" style="margin-top: 10px;"></div>
+            </div>
+            
+            <div class="form-group">
+                <textarea id="chat-input" rows="6" placeholder="Pergunte qualquer coisa sobre segurança..."></textarea>
+            </div>
+            <button onclick="sendChat()">Enviar</button>
+            <div id="chat-result" class="result"></div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost:5000';
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tabs > .tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function showExploitTab(tabName) {
+            document.querySelectorAll('#exploit .panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        function updateActions() {
+            const tool = document.getElementById('tool-select').value;
+            const actionSelect = document.getElementById('action-select');
+            
+            const actions = {
+                nmap: ['quick_scan', 'full_scan', 'stealth_scan', 'udp_scan', 'version_detection', 'vuln_scan', 'all_ports'],
+                metasploit: ['msfconsole', 'search_exploit', 'use_exploit', 'set_target', 'exploit'],
+                shell: ['bash_reverse', 'python_reverse', 'netcat_reverse', 'php_reverse', 'powershell_reverse'],
+                hydra: ['ssh_brute', 'ftp_brute', 'http_brute', 'mysql_brute'],
+                sqlmap: ['basic', 'with_cookie', 'post_data', 'dump_table']
+            };
+            
+            actionSelect.innerHTML = '';
+            (actions[tool] || []).forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a;
+                opt.textContent = a;
+                actionSelect.appendChild(opt);
+            });
+        }
+        
+        async function analyzePassword() {
+            const password = document.getElementById('password-input').value;
+            const resultDiv = document.getElementById('password-result');
+            
+            if (!password) {
+                resultDiv.innerHTML = '<span class="error">Digite uma senha</span>';
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_URL}/analyze/password`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({password})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<h3>Análise da Senha</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function generateWordlist() {
+            const base_word = document.getElementById('wordlist-base').value;
+            const resultDiv = document.getElementById('password-result');
+            
+            if (!base_word) {
+                resultDiv.innerHTML = '<span class="error">Digite uma palavra base</span>';
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_URL}/generate/wordlist`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({base_word})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    const wordlist = data.wordlist || [];
+                    resultDiv.innerHTML = `<h3>Wordlist Gerada</h3><pre>Total: ${data.total_words || 0} palavras\n\n${wordlist.join('\n')}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function generateCommand() {
+            const tool = document.getElementById('tool-select').value;
+            const action = document.getElementById('action-select').value;
+            const paramsText = document.getElementById('params-input').value;
+            const resultDiv = document.getElementById('command-result');
+            
+            try {
+                let params = {};
+                if (paramsText) {
+                    try {
+                        params = JSON.parse(paramsText);
+                    } catch (e) {
+                        resultDiv.innerHTML = '<span class="error">JSON inválido nos parâmetros</span>';
+                        return;
+                    }
+                }
+                
+                const res = await fetch(`${API_URL}/generate/command`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({tool, action, params})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<h3>Comando Gerado</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function analyzeVuln() {
+            const port = parseInt(document.getElementById('port-input').value);
+            const service = document.getElementById('service-input').value;
+            const version = document.getElementById('version-input').value;
+            const resultDiv = document.getElementById('vuln-result');
+            
+            if (!port || !service) {
+                resultDiv.innerHTML = '<span class="error">Preencha porta e serviço</span>';
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_URL}/analyze/vulnerability`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action: 'analyze_service', port, service, version})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<h3>Análise de Vulnerabilidade</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function getPrivEsc() {
+            const os = document.getElementById('os-select').value;
+            const resultDiv = document.getElementById('exploit-result');
+            
+            try {
+                const res = await fetch(`${API_URL}/exploit/privilege-escalation`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({os})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<h3>Privilège Escalation - ${os}</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function getPostExploit() {
+            const phase = document.getElementById('post-phase').value;
+            const os = document.getElementById('post-os').value;
+            const resultDiv = document.getElementById('exploit-result');
+            
+            try {
+                const res = await fetch(`${API_URL}/exploit/post-exploitation`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({phase, os})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<h3>Pós-Exploração</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function getAntiForensics() {
+            const os = document.getElementById('anti-os').value;
+            const resultDiv = document.getElementById('exploit-result');
+            
+            try {
+                const res = await fetch(`${API_URL}/exploit/anti-forensics`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({os})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<h3>Anti-Forensics</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function sendChat() {
+            const prompt = document.getElementById('chat-input').value;
+            const resultDiv = document.getElementById('chat-result');
+            
+            if (!prompt.trim()) {
+                resultDiv.innerHTML = '<span class="error">Digite uma mensagem</span>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '⏳ Processando...';
+            
+            try {
+                const res = await fetch(`${API_URL}/chat`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({prompt})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<pre>${data.response}</pre>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function authenticate() {
+            const apiKey = document.getElementById('api-key-input').value;
+            const resultDiv = document.getElementById('auth-result');
+            
+            if (!apiKey.trim()) {
+                resultDiv.innerHTML = '<span class="error">Digite sua API key</span>';
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_URL}/auth`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({api_key: apiKey})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = '<span style="color: #00ff00;">✓ Conectado!</span>';
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        function showBruteTab(tabName) {
+            document.querySelectorAll('#brute .panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        async function generateHydra() {
+            const target = document.getElementById('hydra-target').value;
+            const service = document.getElementById('hydra-service').value;
+            const username = document.getElementById('hydra-user').value;
+            const port = document.getElementById('hydra-port').value;
+            const resultDiv = document.getElementById('hydra-result');
+            
+            if (!target) {
+                resultDiv.innerHTML = '<span class="error">Informe o target</span>';
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_URL}/brute/hydra`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({target, service, username, port: port || null})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>Comando Hydra</h3>
+                        <pre style="background: #000; padding: 15px; border-radius: 5px;">${data.command}</pre>
+                        <p style="margin-top: 10px;">${data.description}</p>
+                        <p><strong>Dicas:</strong></p>
+                        <ul>${data.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+                    `;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function generateWordlistBrute() {
+            const words = document.getElementById('wl-words').value;
+            const resultDiv = document.getElementById('wl-result');
+            
+            if (!words.trim()) {
+                resultDiv.innerHTML = '<span class="error">Digite algumas palavras base</span>';
+                return;
+            }
+            
+            try {
+                const base_words = words.split(',').map(w => w.trim());
+                const res = await fetch(`${API_URL}/brute/wordlist`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({base_words})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>Wordlist Gerada</h3>
+                        <p>Total: <strong>${data.total}</strong> senhas</p>
+                        <pre style="max-height: 300px; overflow-y: auto;">${data.wordlist.join('\n')}</pre>
+                    `;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+        async function scanWeb() {
+            const url = document.getElementById('scan-url').value;
+            const resultDiv = document.getElementById('scan-result');
+            
+            if (!url.trim()) {
+                resultDiv.innerHTML = '<span class="error">Informe a URL</span>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '🔍 Escaneando...';
+            
+            try {
+                const res = await fetch(`${API_URL}/scan/web`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({url})
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<span class="error">Erro: ${data.error}</span>`;
+                } else {
+                    const summary = data.summary;
+                    let html = `
+                        <h3>Resultado do Scan: ${data.url}</h3>
+                        <div style="margin: 15px 0; padding: 10px; background: ${summary.risk_level === 'CRÍTICO' ? '#330000' : summary.risk_level === 'ALTO' ? '#332200' : '#003300'}; border: 1px solid ${summary.risk_level === 'CRÍTICO' ? '#ff0000' : summary.risk_level === 'ALTO' ? '#ff6600' : '#00ff00'}; border-radius: 5px;">
+                            <strong>Risco: ${summary.risk_level}</strong><br>
+                            Críticas: ${summary.critical} | Altas: ${summary.high} | Médias: ${summary.medium} | Baixas: ${summary.low}
+                        </div>
+                    `;
+                    
+                    if (data.vulnerabilities.length > 0) {
+                        html += '<h4>Vulnerabilidades Encontradas:</h4>';
+                        data.vulnerabilities.forEach(vuln => {
+                            const color = vuln.severity === 'CRÍTICA' ? '#ff0000' : vuln.severity === 'ALTA' ? '#ff6600' : vuln.severity === 'MÉDIA' ? '#ffcc00' : '#00ff00';
+                            html += `
+                                <div style="margin: 10px 0; padding: 10px; border-left: 3px solid ${color}; background: #1a1a1a;">
+                                    <strong style="color: ${color};">[${vuln.severity}] ${vuln.title}</strong><br>
+                                    <small>${vuln.type}</small><br>
+                                    <p>${vuln.description}</p>
+                                    ${vuln.fix ? `<p><strong>Correção:</strong> ${vuln.fix}</p>` : ''}
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html += '<p style="color: #00ff00;">Nenhuma vulnerabilidade encontrada!</p>';
+                    }
+                    
+                    resultDiv.innerHTML = html;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Erro: ${e.message}</span>`;
+            }
+        }
+        
+    </script>
+</body>
+</html>
