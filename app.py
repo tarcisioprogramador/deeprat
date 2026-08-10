@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 import requests
+import os
 
 from modules.password_analyzer import PasswordAnalyzer
 from modules.command_generator import CommandGenerator
@@ -9,7 +10,7 @@ from modules.exploitation import ExploitationModule
 from modules.brute_force import BruteForceModule
 from modules.web_scanner import WebScanner
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 
 HF_API_URL = "https://router.huggingface.co/v1"
@@ -201,7 +202,7 @@ def health():
 
 @app.route('/')
 def index():
-    return send_file('index.html')
+    return send_from_directory('.', 'index.html')
 
 if __name__ == '__main__':
     import os
